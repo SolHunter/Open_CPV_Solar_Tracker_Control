@@ -169,7 +169,7 @@ byte handle_serial() {
 
 // EEPROM WRITE INTEGER
 void EWI(int adr, int wert) {
-  if (((adr==46)|(adr==48)|((adr>58)&(adr<70))) & ((calibration_step==0) | (calibration_step>8 ))){
+  if (((adr==46)|(adr==48)|(adr==124)|((adr>58)&(adr<70))) & ((calibration_step==0) | (calibration_step>8 ))){
     if (!(calibration_step==20)){ return;}
   }  // These values may only be changed when a new calibration is started
   byte low, high;

@@ -68,12 +68,13 @@ for UNO controlbox   321098                   D76543210   */
  interrupts();                                            // activate all Interrupts
 
   if (!(ERI(EA_first_start)==1234)) {
+    calibration_step=1;                                   // this enables writing to all EEPROM positions
     EWI(EA_first_start,1234); 
     EWI(EA_operation_days,0);  //set day counter to 0 for first start
     for (byte hs_counter = 0; hs_counter < 64; hs_counter++)
     {
       EWI(int(hs_counter*2), int(pgm_read_word(&EEPROM_limits[hs_counter*3+2])) ); 
-      Serial.println(F("presets restored"));
+//      Serial.println(F("presets restored"));
     }                  
   }   
   if (!(ERI(EA_calibrated)==1234)) {calibration_step=1; EWI(EA_incomplete_recalibration,0);}// 1234 if calibrated, calibrate otherwise

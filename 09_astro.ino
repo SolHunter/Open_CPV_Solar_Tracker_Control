@@ -37,7 +37,7 @@ void astro_track(){
   
   // CHECK FOR NIGHT
   if (elevation_target < ERI(EA_el_sleep)){
-    if ((calibration_step ==0) & ERI(EA_days_since_cal)>ERI(EA_days_for_cal)) {calibration_step = 22; last_micros_move = micros();}       //start recalibration at night after days_for_cal. 
+    if ((calibration_step ==0) & ERI(EA_days_since_cal)>=ERI(EA_days_for_cal)) {calibration_step = 22; last_micros_move = micros();}       //start recalibration at night after days_for_cal. 
     azimuth_target = ERI(EA_az_target_home);
     elevation_target = ERI(EA_el_target_home);
     night = 1;

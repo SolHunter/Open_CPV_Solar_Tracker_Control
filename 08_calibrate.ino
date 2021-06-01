@@ -120,7 +120,7 @@ void calibrate(){
   if ((calibration_step==6)||(calibration_step==3)){
  //  Serial.print(serial_mode); Serial.print(" "); Serial.println(move_pwm_state);
 
-   if (calibration_step ==3) {track_sensor();}                        // enable sensor tracking
+   if ((calibration_step ==3)&!Serial.available()) {track_sensor();}                        // enable sensor tracking
   
    
    if (move_pwm_state==0){                                            // only react when motors are idle
@@ -165,27 +165,35 @@ void calibrate(){
       }
     }
        
-    if (serial_mode == int('f')){ // f for finish
-      if (calibration_step == 6){
-        calibration_step = 7; i=100; /*mx_zenith_north=0; my_zenith_north=0;*/
-        temporary_mx_neutral = ERI(EA_mx_neutral)-mx_raw; 
-        // Serial.print("temp_mx="); Serial.println(temporary_mx_neutral);
-      } 
-      else {
-        elevation_target = ERI(EA_el_up_limit);
-        Serial.print(F("corr ")); Serial.print(ERI(EA_el_up_limit)/10); Serial.println(F("° u U d D, f finish"));
-        calibration_step = 4; 
-        serial_mode=2;                                                    // request single letter commands from handle_serial()
-        sensor_track = 0;
-      }
-    }
+
 
    }
    if (serial_mode == int('c')){temp_byte = 1;}                           // need to store this information in temp_byte, because move_keep_running resets to 0 in ISR
    if (serial_mode == int('s')){temp_byte = 0;}
    if ((temp_byte == 1)){move_keep_running = 1;}
+   if (serial_mode == int('f')){ // f for finish
+     while(move_pwm_state){}
+     temp_byte = 0;
+     if (calibration_step == 6){
+       calibration_step = 7; i=100; /*mx_zenith_north=0; my_zenith_north=0;*/
+       temporary_mx_neutral = ERI(EA_mx_neutral)-mx_raw; 
+       // Serial.print("temp_mx="); Serial.println(temporary_mx_neutral);
+     } 
+     else {
+       elevation_target = ERI(EA_el_up_limit);
+       Serial.print(F("corr ")); Serial.print(ERI(EA_el_up_limit)/10); Serial.println(F("° u U d D, f finish"));
+       calibration_step = 4; 
+       serial_mode=2;                                                    // request single letter commands from handle_serial()
+       sensor_track = 0;
+     }
+   }   
    serial_mode=2;                                                         // wait for more single letter commands
    if (calibration_step==3) sensor_track = 1;                             // suppress goto, enable sensor tracking, this is probably redundant with main loop. Better keep it.
+
+
+
+
+  
   }
     
   // 7 MOVE TO ELEVATION DOWN LIMIT
