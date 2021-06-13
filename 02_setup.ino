@@ -1,5 +1,5 @@
 void setup() {
- analogReference(INTERNAL);  
+ analogReference(DEFAULT);  
  Serial.begin(19200);                                                   // setup serial, 114400 is not reliable, 19200 recommended
  pinMode(stormpin, INPUT_PULLUP);                                       // stormpin D3 to be connected to a wind wheel with reed relais or similar
  attachInterrupt(1, debounceInterrupt, FALLING);                        // Interrupt 1 at strompin D3, uses falling because it is sharper than rising.

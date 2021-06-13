@@ -48,8 +48,8 @@
 #define EA_sensor_step_error_elevation  96  //  k 0.1%  50  10..500 sensor elevation misbalance threshold for tracking step
 #define EA_sensor_run_error_azimuth 98      //  l 0.1%  100 10..1000  
 #define EA_sensor_run_error_elevation 100   //  m 0.1%  100 10..1000  sensor misbalance threshold for fullspeed tracking
-#define EA_sensor_hysteresis  102           //  n 0.1%  2000  1000..10000 sensor hysteresis that supresses reverse sensor <--> astro track
-#define EA_sensor_direction_hysteresis 104  //  o 0.1%  2000  1000..10000 sensor hysteresis that supresses direction reversals
+#define EA_sensor_hysteresis  102           //  n 1%  500  0..800 sensor hysteresis that supresses reverse sensor <--> astro track
+#define EA_sensor_direction_hysteresis 104  //  o 1%  500  0..2000 sensor hysteresis that supresses direction reversals
 #define EA_astro_step_error_azimuth 106     //  p  3 1..200  
 #define EA_astro_step_error_elevation 108   //  q  3 1..200  
 #define EA_astro_run_error_azimuth  110     //  r  20  1..200  

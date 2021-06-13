@@ -91,7 +91,9 @@ unsigned long last_micros_move;
 // Sensor Tracking
 // ***************************
 
-int sens_total, sens_up, sens_right;    // sensor readings, individual sensor channels are local variables
+int sens_total, sens_up, sens_right; 
+float sens_av_up=0; 
+float sens_av_right=0;    // sensor readings, individual sensor channels are local variables
 byte sensor_track = 0;                  // disables sensor tracking for low sun or calibration steps
 byte night;
 byte prev_elevation_direction, prev_azimuth_direction;  // suppress direction reversals in sensor tracking mode
@@ -365,7 +367,7 @@ const int EEPROM_limits[] PROGMEM =      // pre defined limits for EEPROM reside
 
 /*52 o EA_sensor_direction_hysteresis   */
 0, /*lower limit*/
-800, /*upper limit*/
+2000, /*upper limit*/
 500, /*preset*/
 
 /*53 p EA_astro_step_error_azimuth        */

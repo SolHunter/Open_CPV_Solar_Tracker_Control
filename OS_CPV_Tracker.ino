@@ -1,11 +1,9 @@
-/* Open Source CPV Solar Tracker V0.1 
- *  June 2nd 2021
+/* Open CPV Solar Tracker Control V0.1 
+ *  June 13th 2021
  *  tested with Arduino 1.8.7
 Accomplished
-- RTC correction
-- handle storm during recalibration and return to recalibration
-- Disable sensor tracking at night (defined by a certain elevation)
+- Floating average for sensor step tracking, improves precision and supresses oscillations. No effect on full speed moves.
 
 Next steps:
-- test 
+- make sensor run error azimuth dependent on elevation. Azimuth changes have little effect close to Zenith.
 */

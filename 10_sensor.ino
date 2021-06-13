@@ -9,9 +9,10 @@ void track_sensor(){
     sens_total += sens_[i_s];
   }
 // Normal Orientation of sensor, for 0° rotated sensor, add - signs
-  sens_up = -1023*float(- sens_[0] + sens_[1] + sens_[2] - sens_[3]) / sens_total;
-  sens_right = 1023*float(- sens_[0] - sens_[1] + sens_[2] + sens_[3]) / sens_total;  
-
+  sens_up = -1023*float(- sens_[0] + sens_[1] + sens_[2] - sens_[3]) / (sens_total);
+  sens_right = 1023*float(- sens_[0] - sens_[1] + sens_[2] + sens_[3]) / (sens_total);
+  sens_av_up = 0.98*sens_av_up + 0.02 * sens_up;  
+  sens_av_right = 0.98*sens_av_right + 0.02 * sens_right;
   
 //  Serial.print(F(" st=")); Serial.print(sens_total);
 //  Serial.print(F(" su=")); Serial.print(sens_up);
@@ -20,7 +21,7 @@ void track_sensor(){
 //  Serial.println((sens_total*(1.0+sensor_track*float(ERI(EA_sensor_hysteresis)/100.0))));
   if (((sens_total*(1.0+sensor_track*float(ERI(EA_sensor_hysteresis)/100.0))) > ERI(EA_sensor_direct_sun))){   //!!! need to introduce bool(sensor_track) for sensor_track==2
 
-    Serial.print(F(" sensT="));Serial.print(sens_total);Serial.print(F("\tU="));Serial.print(sens_up);Serial.print(F("\tR="));Serial.print(sens_right);
+    Serial.print(F(" sensT="));Serial.print(sens_total);Serial.print(F("\tU="));Serial.print(sens_av_up);Serial.print(F("\tR="));Serial.print(sens_av_right);Serial.print(F("\tU="));Serial.print(sens_up);Serial.print(F("\tR="));Serial.print(sens_right);
     Serial.print(F("\t1="));Serial.print(sens_[0]);Serial.print(F("\t2="));Serial.print(sens_[1]);Serial.print(F("\t3="));Serial.print(sens_[2]);Serial.print(F("\t4="));Serial.println(sens_[3]);    
     sensor_track=1; // use hysteresis, no constant swapping between modes
   
@@ -31,11 +32,13 @@ void track_sensor(){
         move_plateau_repeat = move_plateau_repeat_[4];
         move_step = 0;
         move_pwm_state = 1;
+        sens_right=0;
       }
-      else if ((abs(sens_up)<=ERI(EA_sensor_run_error_elevation))&(abs(sens_right)*(1.0+float(prev_elevation_direction == move_direction)*float(ERI(EA_sensor_direction_hysteresis))/100.0) > ERI(EA_sensor_step_error_azimuth))){
+      else if ((abs(sens_up)<=ERI(EA_sensor_run_error_elevation))&(abs(sens_av_right)*(1.0+float(prev_elevation_direction == move_direction)*float(ERI(EA_sensor_direction_hysteresis))/100.0) > ERI(EA_sensor_step_error_azimuth))){
         move_plateau_repeat = move_plateau_repeat_[move_direction];
         move_step = 1;
         move_pwm_state = 1;
+        sens_av_right=0;
         prev_elevation_direction = move_direction;
       }
     }
@@ -59,10 +62,11 @@ void track_sensor(){
         move_step = 0;
         move_pwm_state = 1;
       }
-      else if (abs(sens_up)*(1.0+float(prev_azimuth_direction == move_direction)*float(ERI(EA_sensor_direction_hysteresis))/100)>ERI(EA_sensor_step_error_elevation)){
+      else if (abs(sens_av_up)*(1.0+float(prev_azimuth_direction == move_direction)*float(ERI(EA_sensor_direction_hysteresis))/100)>ERI(EA_sensor_step_error_elevation)){
         move_plateau_repeat = move_plateau_repeat_[move_direction];
         move_step = 1;
         move_pwm_state = 1;
+        sens_av_up =0;
         prev_azimuth_direction = move_direction;
       }
     }
